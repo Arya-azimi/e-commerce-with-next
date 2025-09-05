@@ -1,8 +1,9 @@
 "use client";
 
-import { useUserFavorites } from "@/hooks";
-import { ItemsList } from "@/components";
-import { Loading, Error } from "..";
+import { useUserFavorites } from "../../hooks/useUserFavorites";
+import { ItemsList } from "@/components/items-list/items-list";
+import { Loading } from "@/components/loading/loading";
+import { Error } from "@/components/error/error";
 
 function UserFavorites() {
   const { favoriteProducts, loading, error } = useUserFavorites();

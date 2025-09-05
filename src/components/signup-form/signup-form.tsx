@@ -1,3 +1,5 @@
+"use client";
+
 interface SignUpFormProps {
   username: string;
   password: string;

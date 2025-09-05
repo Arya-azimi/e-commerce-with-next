@@ -1,3 +1,4 @@
+"use client";
 import {
   createContext,
   useReducer,
@@ -5,8 +6,9 @@ import {
   useEffect,
   useCallback,
   useMemo,
+  useState,
 } from "react";
-import { Product } from "@/domain";
+import { Product } from "../domain";
 
 interface CartItem extends Product {
   quantity: number;
@@ -76,15 +78,29 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 function CartProvider({ children }: { children: ReactNode }) {
-  const initialState: CartState = {
-    items: JSON.parse(localStorage.getItem("cartItems") || "[]"),
-  };
-
+  const initialState: CartState = { items: [] };
   const [state, dispatch] = useReducer(cartReducer, initialState);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(state.items));
-  }, [state.items]);
+    try {
+      const storedItems = localStorage.getItem("cartItems");
+      if (storedItems) {
+        dispatch({ type: "SET_CART", payload: JSON.parse(storedItems) });
+      }
+    } catch (e) {
+      console.error("Failed to parse cart items from localStorage", e);
+      localStorage.removeItem("cartItems");
+    } finally {
+      setIsLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem("cartItems", JSON.stringify(state.items));
+    }
+  }, [state.items, isLoaded]);
 
   const addItem = useCallback((product: Product) => {
     dispatch({ type: "ADD_ITEM", payload: product });
@@ -117,3 +133,4 @@ function CartProvider({ children }: { children: ReactNode }) {
 }
 
 export { CartContext, CartProvider };
+export type { CartItem };

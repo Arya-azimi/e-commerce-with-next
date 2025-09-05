@@ -1,4 +1,7 @@
-import { ProductImage, ProductInfo, Loading, Error } from "@/components";
+import { ProductImage } from "@/components/product-image";
+import { ProductInfo } from "@/components/product-info";
+import { Loading } from "@/components/loading";
+import { Error } from "@/components/error";
 import { getProductBySlug } from "@/services";
 import { Suspense } from "react";
 
@@ -21,6 +24,7 @@ async function ProductDetailPage({ params }: { params: { slug: string } }) {
       </div>
     );
   } catch (error) {
+    console.log(error);
     return <Error message={"خطا در بارگذاری محصول."} />;
   }
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { Product, CartItem } from "@/domain";
 import { FavoriteButton, CartButton } from "..";
 import Link from "next/link";

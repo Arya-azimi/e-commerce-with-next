@@ -1,3 +1,5 @@
+"use client";
+
 interface LoginFormProps {
   username: string;
   password: string;

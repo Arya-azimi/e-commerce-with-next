@@ -1,3 +1,5 @@
+"use client";
+
 import { CartItem } from "@/domain";
 import Image from "next/image";
 import Link from "next/link";

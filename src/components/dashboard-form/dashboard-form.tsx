@@ -1,3 +1,5 @@
+"use client";
+
 import { User } from "@/domain";
 
 interface DashboardFormProps {

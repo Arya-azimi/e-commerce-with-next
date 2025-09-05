@@ -1,3 +1,4 @@
+"use client";
 import {
   createContext,
   useReducer,
@@ -5,6 +6,7 @@ import {
   useEffect,
   useCallback,
   useMemo,
+  useState,
 } from "react";
 
 type WishlistState = {
@@ -50,14 +52,29 @@ const WishlistContext = createContext<WishlistContextType | undefined>(
 );
 
 function WishlistProvider({ children }: { children: ReactNode }) {
-  const initialState: WishlistState = {
-    productIds: JSON.parse(localStorage.getItem("wishlist") || "[]"),
-  };
+  const initialState: WishlistState = { productIds: [] };
   const [state, dispatch] = useReducer(wishlistReducer, initialState);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("wishlist", JSON.stringify(state.productIds));
-  }, [state.productIds]);
+    try {
+      const storedWishlist = localStorage.getItem("wishlist");
+      if (storedWishlist) {
+        dispatch({ type: "SET_WISHLIST", payload: JSON.parse(storedWishlist) });
+      }
+    } catch (e) {
+      console.error("Failed to parse wishlist from localStorage", e);
+      localStorage.removeItem("wishlist");
+    } finally {
+      setIsLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem("wishlist", JSON.stringify(state.productIds));
+    }
+  }, [state.productIds, isLoaded]);
 
   const toggleWishlist = useCallback((productId: number) => {
     dispatch({ type: "TOGGLE_ITEM", payload: productId });

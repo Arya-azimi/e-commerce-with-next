@@ -19,6 +19,8 @@ export function Card({ product }: ProductCardProps) {
 
       <Link href={`/products/${product.slug}`}>
         <Image
+          width={800}
+          height={600}
           src={product.imageUrl}
           alt={product.name}
           className="w-full h-48 object-cover"

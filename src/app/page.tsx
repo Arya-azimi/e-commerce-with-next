@@ -1,7 +1,6 @@
 import { FeaturedProducts } from "@/components/featured-products";
 import { Hero } from "@/components/hero";
 import { Loading } from "@/components/loading";
-
 import { getProducts } from "@/services/";
 import { Product } from "@/domain";
 import { Suspense } from "react";
