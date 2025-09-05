@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { ShoppingCart, Modal, Wishlist } from "@/components";
 import Link from "next/link";

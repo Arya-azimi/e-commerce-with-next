@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useWishlist } from "@/hooks";
 import { WishlistPanel } from "@/components";

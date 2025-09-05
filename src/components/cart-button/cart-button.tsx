@@ -1,3 +1,5 @@
+"use client";
+
 import { Product } from "@/domain";
 import { useCart } from "@/hooks";
 

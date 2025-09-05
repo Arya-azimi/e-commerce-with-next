@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useCart } from "@/hooks";
 import { ShoppingCartIcon, ShoppingCartPanel } from "@/components";
