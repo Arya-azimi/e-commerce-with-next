@@ -1,6 +1,6 @@
-import { Product } from "../domain";
+import { Product } from "@/domain";
 import apiClient from "./apiClient";
-import { validateProducts } from "../utils";
+import { validateProducts } from "@/lib/validator";
 
 interface GetProductsParams {
   isFeatured?: boolean;
