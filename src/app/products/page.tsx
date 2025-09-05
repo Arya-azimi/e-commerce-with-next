@@ -1,37 +1,55 @@
-// "use client" را حذف کنید
-import { ProductList, ProductFilter } from "@/components";
+import { ProductList, ProductFilter, Loading } from "@/components";
 import { getProducts } from "@/services";
-import { Product } from "@/domain";
 import { UI_MESSAGES } from "@/constants";
+import { Suspense } from "react";
 
-// کامپوننت را async کنید
 async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: { [key: string]: string | undefined };
 }) {
-  // پارامترهای جستجو را از searchParams بگیرید
-  const searchTerm =
-    typeof searchParams.search === "string" ? searchParams.search : undefined;
+  const { search, sort } = searchParams;
 
-  // مستقیماً تابع سرویس را برای گرفتن داده‌ها فراخوانی کنید
-  const products: Product[] = await getProducts({ searchTerm });
+  const products = await getProducts({ searchTerm: search });
+
+  const sortProducts = (products: any[], sortOption: string | undefined) => {
+    const productsToSort = [...products];
+    switch (sortOption) {
+      case "newest":
+        return productsToSort.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      case "oldest":
+        return productsToSort.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      case "price-asc":
+        return productsToSort.sort((a, b) => a.price - b.price);
+      case "price-desc":
+        return productsToSort.sort((a, b) => b.price - a.price);
+      default:
+        return productsToSort;
+    }
+  };
+
+  const sortedProducts = sortProducts(products, sort);
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* ProductFilter یک کامپوننت کلاینت است و مشکلی ندارد */}
       <ProductFilter />
       <div className="mt-6">
-        {products.length > 0 ? (
-          // داده‌های گرفته شده را به عنوان props به ProductList پاس دهید
-          <ProductList products={products} />
-        ) : (
-          <p>{UI_MESSAGES.FETCH_PRODUCTS}</p>
-        )}
+        <Suspense fallback={<Loading />}>
+          {sortedProducts.length > 0 ? (
+            <ProductList products={sortedProducts} />
+          ) : (
+            <p>{UI_MESSAGES.FETCH_PRODUCTS}</p>
+          )}
+        </Suspense>
       </div>
     </div>
   );
 }
 
-// export default کنید
 export default ProductsPage;
