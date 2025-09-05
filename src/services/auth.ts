@@ -1,4 +1,4 @@
-import { AuthResult, CartItem } from "../domain";
+import { AuthResult, CartItem } from "@/domain";
 import apiClient from "./apiClient";
 
 type AuthCredentials = {

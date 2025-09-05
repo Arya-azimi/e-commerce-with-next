@@ -1,4 +1,4 @@
-import { API_URL } from "../constants";
+import { API_URL } from "@/constants";
 
 interface ApiClientOptions<TBody> extends Omit<RequestInit, "body"> {
   body?: TBody;
