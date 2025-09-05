@@ -21,7 +21,6 @@ async function ProductDetailPage({ params }: { params: { slug: string } }) {
       </div>
     );
   } catch (error) {
-    console.log(error);
     return <Error message={"خطا در بارگذاری محصول."} />;
   }
 }

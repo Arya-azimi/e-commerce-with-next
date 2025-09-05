@@ -1,6 +1,6 @@
 import { useAuth, useAuthForm, useNotification } from "./";
 import { UI_MESSAGES, ERROR_MESSAGES } from "@/constants";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 function useLogin() {
   const { username, password, handleChange } = useAuthForm();

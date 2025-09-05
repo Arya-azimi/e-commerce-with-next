@@ -2,6 +2,7 @@ import { ProductList, ProductFilter, Loading } from "@/components";
 import { getProducts } from "@/services";
 import { UI_MESSAGES } from "@/constants";
 import { Suspense } from "react";
+import { Product } from "@/domain";
 
 async function ProductsPage({
   searchParams,
@@ -12,7 +13,7 @@ async function ProductsPage({
 
   const products = await getProducts({ searchTerm: search });
 
-  const sortProducts = (products: any[], sortOption: string | undefined) => {
+  const sortProducts = (products: Product[], sortOption?: string) => {
     const productsToSort = [...products];
     switch (sortOption) {
       case "newest":
