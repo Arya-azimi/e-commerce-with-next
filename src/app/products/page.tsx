@@ -1,26 +1,37 @@
-import { useProductsPage } from "@/hooks";
-import { Loading, Error, ProductList, ProductFilter } from "@/components";
+// "use client" را حذف کنید
+import { ProductList, ProductFilter } from "@/components";
+import { getProducts } from "@/services";
+import { Product } from "@/domain";
 import { UI_MESSAGES } from "@/constants";
 
-function Products() {
-  const { loading, error, sortedProducts } = useProductsPage();
+// کامپوننت را async کنید
+async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  // پارامترهای جستجو را از searchParams بگیرید
+  const searchTerm =
+    typeof searchParams.search === "string" ? searchParams.search : undefined;
 
-  const renderProductContent = () => {
-    if (loading) {
-      return <Loading />;
-    }
-    if (error) {
-      return <Error message={error || UI_MESSAGES.FETCH_PRODUCTS} />;
-    }
-    return <ProductList products={sortedProducts} />;
-  };
+  // مستقیماً تابع سرویس را برای گرفتن داده‌ها فراخوانی کنید
+  const products: Product[] = await getProducts({ searchTerm });
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* ProductFilter یک کامپوننت کلاینت است و مشکلی ندارد */}
       <ProductFilter />
-      <div className="mt-6">{renderProductContent()}</div>
+      <div className="mt-6">
+        {products.length > 0 ? (
+          // داده‌های گرفته شده را به عنوان props به ProductList پاس دهید
+          <ProductList products={products} />
+        ) : (
+          <p>{UI_MESSAGES.FETCH_PRODUCTS}</p>
+        )}
+      </div>
     </div>
   );
 }
 
-export { Products };
+// export default کنید
+export default ProductsPage;

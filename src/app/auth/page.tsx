@@ -58,4 +58,4 @@ function Auth() {
   );
 }
 
-export { Auth };
+export default Auth;
