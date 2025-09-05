@@ -1,8 +1,10 @@
-import { FeaturedProducts, Hero } from "@/components";
+import { FeaturedProducts } from "@/components/featured-products";
+import { Hero } from "@/components/hero";
+import { Loading } from "@/components/loading";
+
 import { getProducts } from "@/services/";
 import { Product } from "@/domain";
 import { Suspense } from "react";
-import { Loading } from "@/components";
 
 async function Home() {
   const products: Product[] = await getProducts({ isFeatured: true });

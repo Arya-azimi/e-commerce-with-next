@@ -1,4 +1,6 @@
-import { ProductList, ProductFilter, Loading } from "@/components";
+import { ProductList } from "@/components/product-list";
+import { ProductFilter } from "@/components/product-filter";
+import { Loading } from "@/components/loading";
 import { getProducts } from "@/services";
 import { UI_MESSAGES } from "@/constants";
 import { Suspense } from "react";

@@ -1,3 +1,5 @@
+"use client";
+
 import { useUserFavorites } from "@/hooks";
 import { ItemsList } from "@/components";
 import { Loading, Error } from "..";

@@ -1,3 +1,5 @@
+"use client";
+
 import { useUserCart } from "@/hooks";
 import { ItemsList } from "@/components";
 

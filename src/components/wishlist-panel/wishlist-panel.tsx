@@ -1,3 +1,5 @@
+"use client";
+
 import { useWishlist } from "@/hooks";
 import { useProducts } from "@/hooks";
 import { Loading, Error } from "..";

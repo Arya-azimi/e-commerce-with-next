@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef } from "react";
 import { useAuth, useCart, useWishlist } from "@/hooks";
 import { getCart, saveCart, getWishlist, updateWishlist } from "@/services";
