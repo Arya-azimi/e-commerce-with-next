@@ -1,3 +1,5 @@
+// src/app/products/[slug]/page.tsx
+
 import { ProductImage } from "@/components/product-image";
 import { ProductInfo } from "@/components/product-info";
 import { Loading } from "@/components/loading";
@@ -5,9 +7,14 @@ import { Error } from "@/components/error";
 import { getProductBySlug } from "@/services";
 import { Suspense } from "react";
 
-async function ProductDetailPage({ params }: { params: { slug: string } }) {
+async function ProductDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   try {
-    const product = await getProductBySlug(params.slug);
+    const { slug } = await params;
+    const product = await getProductBySlug(slug);
 
     if (!product) {
       return <div className="text-center p-8">محصول یافت نشد.</div>;

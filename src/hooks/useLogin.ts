@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 function useLogin() {
   const { username, password, handleChange } = useAuthForm();
   const { login } = useAuth();
-  const navigate = useRouter();
+  const router = useRouter();
   const { showNotification } = useNotification();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -14,7 +14,7 @@ function useLogin() {
       try {
         await login(username, password);
         showNotification(UI_MESSAGES.LOGIN_SUCCESS, "success");
-        navigate.push("/");
+        router.push("/");
       } catch (error) {
         console.error("Login failed:", error);
         const errorMessage =

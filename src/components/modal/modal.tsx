@@ -8,9 +8,17 @@ interface ModalProps {
   onConfirm: () => void;
   title: string;
   children: ReactNode;
+  buttonSubmit: string;
 }
 
-function Modal({ isOpen, onClose, onConfirm, title, children }: ModalProps) {
+function Modal({
+  isOpen,
+  onClose,
+  onConfirm,
+  title,
+  children,
+  buttonSubmit,
+}: ModalProps) {
   if (!isOpen) return null;
 
   return (
@@ -21,7 +29,7 @@ function Modal({ isOpen, onClose, onConfirm, title, children }: ModalProps) {
         <div className="flex justify-end space-x-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition-colors"
+            className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition-colors ml-3"
           >
             نه، لغو
           </button>
@@ -29,7 +37,7 @@ function Modal({ isOpen, onClose, onConfirm, title, children }: ModalProps) {
             onClick={onConfirm}
             className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors"
           >
-            بله، خارج شو
+            {buttonSubmit}
           </button>
         </div>
       </div>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useProfile } from "@/hooks";
-import { Modal, DashboardForm } from "@/components";
+import { Modal } from "../modal";
+import { DashboardForm } from "../dashboard-form";
 
 export function UserProfile() {
   const {
@@ -32,12 +33,14 @@ export function UserProfile() {
         onClose={onCloseModal}
         onConfirm={onConfirm}
         title="تایید هویت"
+        buttonSubmit="تایید"
       >
         <input
+          className="mt-1 block w-full px-3 py-2 border border-gray-500 rounded-md"
+          placeholder="رمز عبور فعلی خود را وارد کنید"
           type="password"
           value={modal.currentPassword}
           onChange={onPasswordChange}
-          // ...
         />
       </Modal>
     </>

@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { ShoppingCart, Modal, Wishlist } from "@/components";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks";
+import { ShoppingCart } from "../shopping-cart";
+import { Modal } from "../modal";
+import { Wishlist } from "../wishlist";
 
 function Header() {
   const { user, logout } = useAuth();
@@ -71,6 +73,7 @@ function Header() {
         onClose={() => setIsLogoutModalOpen(false)}
         onConfirm={handleLogout}
         title="خروج از حساب کاربری"
+        buttonSubmit="تایید و خروج"
       >
         <p>آیا برای خروج از حساب کاربری خود مطمئن هستید؟</p>
       </Modal>

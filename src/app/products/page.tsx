@@ -50,7 +50,7 @@ async function ProductsGrid({
   return <ProductList products={sortedProducts} />;
 }
 
-export default function ProductsPage({
+export default async function ProductsPage({
   searchParams,
 }: {
   searchParams?: {
@@ -58,8 +58,9 @@ export default function ProductsPage({
     sort?: string;
   };
 }) {
-  const search = searchParams?.search;
-  const sort = searchParams?.sort;
+  const awaitedSearchParams = await searchParams;
+  const search = awaitedSearchParams?.search;
+  const sort = awaitedSearchParams?.sort;
 
   return (
     <div className="container mx-auto px-4 py-8">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useUserCart } from "@/hooks";
-import { ItemsList } from "@/components";
+import { ItemsList } from "@/components/items-list";
 
 export function UserCart() {
   const { items } = useUserCart();

@@ -7,7 +7,7 @@ import {
   NotificationProvider,
   WishlistProvider,
 } from "@/context";
-import { DataSync } from "@/components";
+import { DataSync } from "@/components/data-sync";
 
 interface AppProvidersProps {
   children: ReactNode;

@@ -31,6 +31,8 @@ function ItemsList({ title, products, emptyMessage }: ItemsListProps) {
             className="flex items-center bg-white p-4 rounded-lg shadow-md"
           >
             <Image
+              width={800}
+              height={600}
               src={item.imageUrl}
               alt={item.name}
               className="w-20 h-20 object-cover rounded-md mr-4"

@@ -1,5 +1,6 @@
 import { Product } from "@/domain";
-import { CartButton, FavoriteButton } from "@/components";
+import { CartButton } from "../cart-button";
+import { FavoriteButton } from "../favorite-button";
 
 interface ProductInfoProps {
   product: Product;

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useCart } from "@/hooks";
-import { ShoppingCartIcon, ShoppingCartPanel } from "@/components";
+import { ShoppingCartPanel } from "../shopping-cart-panel";
+import { ShoppingCartIcon } from "../shopping-cart-icon";
 
 export function ShoppingCart() {
   const { items, removeItem } = useCart();

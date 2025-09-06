@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useWishlist } from "@/hooks";
-import { WishlistPanel } from "@/components";
+import { WishlistPanel } from "../wishlist-panel";
 
 export function Wishlist() {
   const { wishlist } = useWishlist();
