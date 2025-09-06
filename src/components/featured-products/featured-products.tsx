@@ -1,17 +1,17 @@
 import { Product } from "@/domain";
-import { Card } from "@/components";
+import { Card } from "@/components/card/card";
 
-function FeaturedProducts({ products }: { products: Product[] }) {
+export function FeaturedProducts({ products }: { products: Product[] }) {
+  const featured = products.filter((p) => p.isFeatured).slice(0, 10);
+
   return (
     <section>
       <h2 className="text-3xl font-bold mb-6">محصولات پرفروش</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {products.map((product) => (
+        {featured.map((product) => (
           <Card key={product.id} product={product} />
         ))}
       </div>
     </section>
   );
 }
-
-export { FeaturedProducts };

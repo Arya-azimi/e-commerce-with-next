@@ -1,11 +1,11 @@
 "use client";
 
-import { useUserFavorites } from "../../hooks/useUserFavorites";
+import { useUserFavorites } from "@/hooks/useUserFavorites";
 import { ItemsList } from "@/components/items-list/items-list";
 import { Loading } from "@/components/loading/loading";
 import { Error } from "@/components/error/error";
 
-function UserFavorites() {
+export function UserFavorites() {
   const { favoriteProducts, loading, error } = useUserFavorites();
 
   if (loading) return <Loading />;
@@ -19,5 +19,3 @@ function UserFavorites() {
     />
   );
 }
-
-export { UserFavorites };

@@ -1,18 +1,25 @@
-import { ProductList, ProductFilter, Loading } from "@/components";
+import { Suspense } from "react";
+import { Product } from "@/domain";
 import { getProducts } from "@/services";
 import { UI_MESSAGES } from "@/constants";
-import { Suspense } from "react";
 
-async function ProductsPage({
-  searchParams,
+import { ProductFilter } from "@/components/product-filter/product-filter";
+import { Loading } from "@/components/loading/loading";
+import { ProductList } from "@/components/product-list/product-list";
+
+async function ProductsGrid({
+  search,
+  sort,
 }: {
-  searchParams: { [key: string]: string | undefined };
+  search?: string;
+  sort?: string;
 }) {
-  const { search, sort } = searchParams;
-
   const products = await getProducts({ searchTerm: search });
 
-  const sortProducts = (products: any[], sortOption: string | undefined) => {
+  const sortProducts = (
+    products: Product[],
+    sortOption?: string
+  ): Product[] => {
     const productsToSort = [...products];
     switch (sortOption) {
       case "newest":
@@ -36,20 +43,32 @@ async function ProductsPage({
 
   const sortedProducts = sortProducts(products, sort);
 
+  if (sortedProducts.length === 0) {
+    return <p className="text-center p-8">{UI_MESSAGES.NO_PRODUCTS}</p>;
+  }
+
+  return <ProductList products={sortedProducts} />;
+}
+
+export default function ProductsPage({
+  searchParams,
+}: {
+  searchParams?: {
+    search?: string;
+    sort?: string;
+  };
+}) {
+  const search = searchParams?.search;
+  const sort = searchParams?.sort;
+
   return (
     <div className="container mx-auto px-4 py-8">
       <ProductFilter />
       <div className="mt-6">
-        <Suspense fallback={<Loading />}>
-          {sortedProducts.length > 0 ? (
-            <ProductList products={sortedProducts} />
-          ) : (
-            <p>{UI_MESSAGES.FETCH_PRODUCTS}</p>
-          )}
+        <Suspense key={`${search}-${sort}`} fallback={<Loading />}>
+          <ProductsGrid search={search} sort={sort} />
         </Suspense>
       </div>
     </div>
   );
 }
-
-export default ProductsPage;
