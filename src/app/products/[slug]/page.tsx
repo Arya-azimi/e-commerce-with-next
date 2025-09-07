@@ -1,5 +1,3 @@
-// src/app/products/[slug]/page.tsx
-
 import { ProductImage } from "@/components/product-image";
 import { ProductInfo } from "@/components/product-info";
 import { Loading } from "@/components/loading";

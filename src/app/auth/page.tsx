@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useLogin, useSignUp } from "../../hooks";
-import { LoginForm, SignUpForm, AuthLayout } from "../../components";
+import { useLogin, useSignUp } from "@/hooks";
+import { LoginForm, SignUpForm, AuthLayout } from "@/components";
 
 type AuthMode = "login" | "signup";
 

@@ -6,6 +6,7 @@ interface GetProductsParams {
   isFeatured?: boolean;
   slug?: string;
   searchTerm?: string;
+  ids?: number[];
 }
 
 export async function getProducts(
@@ -23,12 +24,16 @@ export async function getProducts(
     if (params.searchTerm) {
       query.append("q", params.searchTerm);
     }
+    if (params.ids && params.ids.length > 0) {
+      params.ids.forEach((id) => query.append("id", id.toString()));
+    }
   }
 
   const endpoint = `products?${query.toString()}`;
   const rawData = await apiClient.get<any[]>(endpoint);
   return validateProducts(rawData);
 }
+
 export async function getProductBySlug(slug: string): Promise<Product> {
   const products = await getProducts({ slug });
   if (products.length === 0) {

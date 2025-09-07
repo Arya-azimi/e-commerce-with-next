@@ -1,10 +1,7 @@
-// src/app/page.tsx
-
 import { Suspense } from "react";
 import { Product } from "@/domain";
 import { getProducts } from "@/services";
 
-// ایمپورت مستقیم
 import { Hero } from "@/components/hero/hero";
 import { FeaturedProducts } from "@/components/featured-products/featured-products";
 import { Loading } from "@/components/loading/loading";

@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { Product } from "../domain";
+import { Product } from "@/domain";
 
 interface CartItem extends Product {
   quantity: number;

@@ -1,10 +1,12 @@
 "use client";
 
 import { useWishlist } from "@/hooks";
-import { useProducts } from "@/hooks";
 import { Loading, Error } from "..";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getProducts } from "@/services";
+import { Product } from "@/domain";
 
 interface WishlistPanelProps {
   onClose: () => void;
@@ -12,7 +14,23 @@ interface WishlistPanelProps {
 
 export function WishlistPanel({ onClose }: WishlistPanelProps) {
   const { wishlist, toggleWishlist } = useWishlist();
-  const { products, loading, error } = useProducts();
+  const [favoriteProducts, setFavoriteProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (wishlist.length === 0) {
+      setFavoriteProducts([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    getProducts({ ids: wishlist })
+      .then(setFavoriteProducts)
+      .catch(() => setError("Failed to load wishlist items"))
+      .finally(() => setLoading(false));
+  }, [wishlist]);
 
   if (loading)
     return (
@@ -26,8 +44,6 @@ export function WishlistPanel({ onClose }: WishlistPanelProps) {
         <Error message={error} />
       </div>
     );
-
-  const favoriteProducts = products.filter((p) => wishlist.includes(p.id));
 
   return (
     <div
@@ -68,10 +84,10 @@ export function WishlistPanel({ onClose }: WishlistPanelProps) {
               {favoriteProducts.map((item) => (
                 <div key={item.id} className="flex items-center space-x-4">
                   <Image
-                    width={800}
-                    height={600}
                     src={item.imageUrl}
                     alt={item.name}
+                    width={64}
+                    height={64}
                     className="w-16 h-16 ml-2 object-cover rounded-md"
                   />
                   <div className="flex-grow">

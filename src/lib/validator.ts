@@ -1,4 +1,4 @@
-import { Product } from "@/domain/types";
+import { Product } from "@/domain";
 
 function isProduct(item: any): item is Product {
   return (
