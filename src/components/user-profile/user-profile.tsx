@@ -33,11 +33,15 @@ export function UserProfile() {
         onClose={onCloseModal}
         onConfirm={onConfirm}
         title="تایید هویت"
-        buttonSubmit="تایید"
+        buttonSubmit="ذخیره تغییرات" // متن مناسب
+        submitButtonClass="bg-blue-600 hover:bg-blue-700" // استایل مناسب
       >
+        <p className="mb-4">
+          برای اعمال تغییرات، لطفا رمز عبور فعلی خود را وارد کنید:
+        </p>
         <input
-          className="mt-1 block w-full px-3 py-2 border border-gray-500 rounded-md"
-          placeholder="رمز عبور فعلی خود را وارد کنید"
+          className="mt-1 block w-full px-3 py-2 border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          placeholder="رمز عبور فعلی"
           type="password"
           value={modal.currentPassword}
           onChange={onPasswordChange}

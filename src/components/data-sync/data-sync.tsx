@@ -1,43 +1,17 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useAuth, useCart, useWishlist } from "@/hooks";
-import { getCart, saveCart, getWishlist, updateWishlist } from "@/services";
-import { CartItem } from "@/domain";
+import { useEffect } from "react";
+import { useAuth, useWishlist } from "@/hooks";
+import { getWishlist, updateWishlist } from "@/services";
 
 function DataSync() {
   const { user } = useAuth();
-  const { items: localCart, setCart, clearCart } = useCart();
   const { wishlist, setWishlist, clearWishlist } = useWishlist();
-  const isInitialMount = useRef(true);
 
+  // همگام‌سازی Wishlist هنگام ورود کاربر
   useEffect(() => {
-    const syncOnAuthChange = async () => {
+    const syncWishlist = async () => {
       if (user) {
-        const localCartItems = JSON.parse(
-          localStorage.getItem("cartItems") || "[]"
-        );
-        if (localCartItems.length > 0) {
-          const serverCart = await getCart(user.userId);
-          const mergedCart: CartItem[] = [...serverCart];
-          localCartItems.forEach((localItem: CartItem) => {
-            const serverItem = mergedCart.find(
-              (item) => item.id === localItem.id
-            );
-            if (serverItem) {
-              serverItem.quantity += localItem.quantity;
-            } else {
-              mergedCart.push(localItem);
-            }
-          });
-          await saveCart(user.userId, mergedCart);
-          setCart(mergedCart);
-          localStorage.removeItem("cartItems");
-        } else {
-          const serverCart = await getCart(user.userId);
-          setCart(serverCart);
-        }
-
         const localWishlist = JSON.parse(
           localStorage.getItem("wishlist") || "[]"
         );
@@ -54,28 +28,15 @@ function DataSync() {
           setWishlist(serverWishlist);
         }
       } else {
-        clearCart();
         clearWishlist();
       }
     };
 
-    syncOnAuthChange();
-  }, [user]);
+    syncWishlist();
+  }, [user, setWishlist, clearWishlist]);
 
+  // ذخیره Wishlist در سرور هنگام تغییر
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-    if (user) {
-      saveCart(user.userId, localCart);
-    }
-  }, [localCart, user]);
-
-  useEffect(() => {
-    if (isInitialMount.current) {
-      return;
-    }
     if (user) {
       updateWishlist(user.userId, wishlist);
     }

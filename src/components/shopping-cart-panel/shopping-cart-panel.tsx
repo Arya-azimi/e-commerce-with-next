@@ -57,6 +57,8 @@ export function ShoppingCartPanel({
               {items.map((item) => (
                 <div key={item.id} className="flex items-center space-x-4">
                   <Image
+                    width={800}
+                    height={600}
                     src={item.imageUrl}
                     alt={item.name}
                     className="w-16 h-16 ml-2 object-cover rounded-md"

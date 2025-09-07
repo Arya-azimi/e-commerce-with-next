@@ -9,6 +9,9 @@ import {
   useState,
 } from "react";
 import { Product } from "@/domain";
+import { useAuth, useNotification } from "@/hooks";
+import { getCart, saveCart } from "@/services";
+import { ERROR_MESSAGES } from "@/constants";
 
 interface CartItem extends Product {
   quantity: number;
@@ -72,7 +75,7 @@ interface CartContextType {
   addItem: (product: Product) => void;
   removeItem: (productId: number) => void;
   clearCart: () => void;
-  setCart: (items: CartItem[]) => void;
+  isLoading: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -80,43 +83,91 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 function CartProvider({ children }: { children: ReactNode }) {
   const initialState: CartState = { items: [] };
   const [state, dispatch] = useReducer(cartReducer, initialState);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
+  const { showNotification } = useNotification();
 
+  // واکشی اولیه سبد خرید از سرور یا localStorage
   useEffect(() => {
-    try {
-      const storedItems = localStorage.getItem("cartItems");
-      if (storedItems) {
-        dispatch({ type: "SET_CART", payload: JSON.parse(storedItems) });
+    const loadCart = async () => {
+      setIsLoading(true);
+      try {
+        if (user) {
+          const serverCart = await getCart(user.userId);
+          dispatch({ type: "SET_CART", payload: serverCart });
+        } else {
+          const storedItems = localStorage.getItem("cartItems");
+          if (storedItems) {
+            dispatch({ type: "SET_CART", payload: JSON.parse(storedItems) });
+          }
+        }
+      } catch (e) {
+        console.error("Failed to load cart:", e);
+        showNotification(ERROR_MESSAGES.CART_SAVE_FAILED, "error");
+      } finally {
+        setIsLoading(false);
       }
-    } catch (e) {
-      console.error("Failed to parse cart items from localStorage", e);
-      localStorage.removeItem("cartItems");
-    } finally {
-      setIsLoaded(true);
-    }
-  }, []);
+    };
+    loadCart();
+  }, [user, showNotification]);
 
+  // ذخیره سبد خرید در localStorage برای کاربران مهمان
   useEffect(() => {
-    if (isLoaded) {
+    if (!user) {
       localStorage.setItem("cartItems", JSON.stringify(state.items));
     }
-  }, [state.items, isLoaded]);
+  }, [state.items, user]);
 
-  const addItem = useCallback((product: Product) => {
-    dispatch({ type: "ADD_ITEM", payload: product });
-  }, []);
+  const addItem = useCallback(
+    async (product: Product) => {
+      const originalCart = [...state.items];
+      dispatch({ type: "ADD_ITEM", payload: product }); // آپدیت خوش‌بینانه UI
 
-  const removeItem = useCallback((productId: number) => {
-    dispatch({ type: "REMOVE_ITEM", payload: { productId } });
-  }, []);
+      if (user) {
+        try {
+          const updatedCart = cartReducer(state, {
+            type: "ADD_ITEM",
+            payload: product,
+          });
+          await saveCart(user.userId, updatedCart.items);
+        } catch (error) {
+          showNotification(ERROR_MESSAGES.CART_SAVE_FAILED, "error");
+          dispatch({ type: "SET_CART", payload: originalCart });
+          console.log(error);
+        }
+      }
+    },
+    [state, user, showNotification]
+  );
+
+  const removeItem = useCallback(
+    async (productId: number) => {
+      const originalCart = [...state.items];
+      dispatch({ type: "REMOVE_ITEM", payload: { productId } }); // آپدیت خوش‌بینانه UI
+
+      if (user) {
+        try {
+          const updatedCart = cartReducer(state, {
+            type: "REMOVE_ITEM",
+            payload: { productId },
+          });
+          await saveCart(user.userId, updatedCart.items);
+        } catch (error) {
+          showNotification(ERROR_MESSAGES.CART_SAVE_FAILED, "error");
+          dispatch({ type: "SET_CART", payload: originalCart });
+          console.log(error);
+        }
+      }
+    },
+    [state, user, showNotification]
+  );
 
   const clearCart = useCallback(() => {
     dispatch({ type: "CLEAR_CART" });
-  }, []);
-
-  const setCart = useCallback((items: CartItem[]) => {
-    dispatch({ type: "SET_CART", payload: items });
-  }, []);
+    if (user) {
+      saveCart(user.userId, []);
+    }
+  }, [user]);
 
   const value = useMemo(
     () => ({
@@ -124,9 +175,9 @@ function CartProvider({ children }: { children: ReactNode }) {
       addItem,
       removeItem,
       clearCart,
-      setCart,
+      isLoading,
     }),
-    [state.items, addItem, removeItem, clearCart, setCart]
+    [state.items, addItem, removeItem, clearCart, isLoading]
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

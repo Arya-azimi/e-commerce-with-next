@@ -73,7 +73,8 @@ function Header() {
         onClose={() => setIsLogoutModalOpen(false)}
         onConfirm={handleLogout}
         title="خروج از حساب کاربری"
-        buttonSubmit="تایید و خروج"
+        buttonSubmit="بله، خارج شو"
+        submitButtonClass="bg-red-500 hover:bg-red-600" // استایل دکمه تخریبی
       >
         <p>آیا برای خروج از حساب کاربری خود مطمئن هستید؟</p>
       </Modal>
